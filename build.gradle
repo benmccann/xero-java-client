@@ -1,5 +1,12 @@
+// Copyright 2014 Connectifier, Inc. All Rights Reserved.
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.connectifier'
+version = '0.1'
 
 repositories {
   mavenCentral()
@@ -15,5 +22,57 @@ dependencies {
 sourceSets {
   main {
     java.srcDirs = [ 'src/main/java', 'src/generated/java' ]
+  }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+ 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives sourcesJar
+  archives javadocJar
+}
+
+signing {
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories.mavenDeployer {
+    beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+    repository(url: "http://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+      authentication(userName: nexusUsername, password: nexusPassword)
+    }
+    pom.project {
+      name 'Xero API Java client library'
+      description 'Xero API Java client library'
+      url 'https://github.com/connectifier/xero-java-client'
+      licenses {
+        license {
+          name 'The Apache Software License, Version 2.0'
+          url 'https://github.com/connectifier/xero-java-client/blob/master/LICENSE'
+          distribution 'repo'
+        }
+      }
+      scm {
+        url 'https://github.com/connectifier/xero-java-client'
+        connection 'git@github.com:connectifier/xero-java-client.git'
+      }
+      developers {
+        developer {
+          id 'benmccann'
+          name 'Benjamin McCann'
+          organization 'connectifier.com'
+          organizationUrl 'https://www.connectifier.com/'
+        }
+      }
+    }
   }
 }
