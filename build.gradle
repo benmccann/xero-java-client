@@ -1,12 +1,13 @@
 // Copyright 2014 Connectifier, Inc. All Rights Reserved.
 
-apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'ivy-publish'
+apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.connectifier'
-version = '0.1'
+version = '0.1-SNAPSHOT'
 
 repositories {
   mavenCentral()
@@ -22,6 +23,24 @@ dependencies {
 sourceSets {
   main {
     java.srcDirs = [ 'src/main/java', 'src/generated/java' ]
+  }
+}
+
+// Publish to local ivy repository with: gradle publishIvyJavaPublicationToIvyRepository
+publishing {
+  publications {
+    ivyJava(IvyPublication) {
+      from components.java
+    }
+  }
+  repositories {
+    ivy {
+      url "${System.properties['user.home']}/.ivy2/local"
+      layout 'pattern', {
+        artifact '[organisation]/[module]/[revision]/[ext]s/[artifact](.[ext])'
+        ivy '[organisation]/[module]/[revision]/ivys/ivy.xml'
+      }
+    }
   }
 }
 
