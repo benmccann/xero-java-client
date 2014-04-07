@@ -26,6 +26,7 @@ import org.scribe.model.Verb;
 import org.scribe.oauth.OAuthService;
 
 import com.connectifier.xeroclient.models.Account;
+import com.connectifier.xeroclient.models.ApiException;
 import com.connectifier.xeroclient.models.BankTransaction;
 import com.connectifier.xeroclient.models.BrandingTheme;
 import com.connectifier.xeroclient.models.Contact;
@@ -84,7 +85,16 @@ public class XeroClient {
     service.signRequest(token, request);
     Response response = request.send();
     if (response.getCode() != 200) {
-      throw new XeroApiException(response.getCode() + " response: " + response.getMessage());
+      try {
+        JAXBContext context = JAXBContext.newInstance(ApiException.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        Source source = new StreamSource(new ByteArrayInputStream(response.getBody().getBytes()));
+        ApiException exception = unmarshaller.unmarshal(source, ApiException.class).getValue();
+        throw new XeroApiException(response.getCode() + " response: Error number "
+            + exception.getErrorNumber() + ". " + exception.getMessage());        
+      } catch (JAXBException e) {
+        throw new IllegalStateException(e);
+      }
     }
     try {
       JAXBContext context = JAXBContext.newInstance(ResponseType.class);
