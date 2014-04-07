@@ -85,27 +85,24 @@ public class XeroClient {
     service.signRequest(token, request);
     Response response = request.send();
     if (response.getCode() != 200) {
-      try {
-        JAXBContext context = JAXBContext.newInstance(ApiException.class);
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-        Source source = new StreamSource(new ByteArrayInputStream(response.getBody().getBytes()));
-        ApiException exception = unmarshaller.unmarshal(source, ApiException.class).getValue();
-        throw new XeroApiException(response.getCode() + " response: Error number "
-            + exception.getErrorNumber() + ". " + exception.getMessage());        
-      } catch (JAXBException e) {
-        throw new IllegalStateException(e);
-      }
+      ApiException exception = unmarshallResponse(response, ApiException.class);
+      throw new XeroApiException(response.getCode() + " response: Error number "
+          + exception.getErrorNumber() + ". " + exception.getMessage());        
     }
+    return unmarshallResponse(response, ResponseType.class);
+  }
+
+  private <T> T unmarshallResponse(Response response, Class<T> clazz) {
     try {
-      JAXBContext context = JAXBContext.newInstance(ResponseType.class);
+      JAXBContext context = JAXBContext.newInstance(clazz);
       Unmarshaller unmarshaller = context.createUnmarshaller();
       Source source = new StreamSource(new ByteArrayInputStream(response.getBody().getBytes()));
-      return unmarshaller.unmarshal(source, ResponseType.class).getValue();
+      return unmarshaller.unmarshal(source, clazz).getValue();
     } catch (JAXBException e) {
       throw new IllegalStateException(e);
     }
   }
-
+  
   protected void addToMapIfNotNull(Map<String,String> map, String key, Object value) {
     if (value != null) {
       map.put(key, value.toString());
