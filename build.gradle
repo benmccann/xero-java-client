@@ -38,7 +38,7 @@ publishing {
       url "${System.properties['user.home']}/.ivy2/local"
       layout 'pattern', {
         artifact '[organisation]/[module]/[revision]/[ext]s/[artifact](.[ext])'
-        ivy '[organisation]/[module]/[revision]/ivys/ivy.xml'
+        ivy '[organisation]/[module]/[revision]/[artifact]s/[artifact](.[ext])'
       }
     }
   }

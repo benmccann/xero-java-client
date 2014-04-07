@@ -83,12 +83,14 @@ public class XeroClient {
     }
     service.signRequest(token, request);
     Response response = request.send();
+    if (response.getCode() != 200) {
+      throw new XeroApiException(response.getCode() + " response: " + response.getMessage());
+    }
     try {
       JAXBContext context = JAXBContext.newInstance(ResponseType.class);
       Unmarshaller unmarshaller = context.createUnmarshaller();
       Source source = new StreamSource(new ByteArrayInputStream(response.getBody().getBytes()));
-      ResponseType responseType = unmarshaller.unmarshal(source, ResponseType.class).getValue();
-      return responseType;
+      return unmarshaller.unmarshal(source, ResponseType.class).getValue();
     } catch (JAXBException e) {
       throw new IllegalStateException(e);
     }
