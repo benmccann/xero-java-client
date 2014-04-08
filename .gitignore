@@ -1,4 +1,4 @@
-src/generated/java
+client/src/generated/java
 
 .gradle
 build

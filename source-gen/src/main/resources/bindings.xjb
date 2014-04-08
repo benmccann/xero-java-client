@@ -1,57 +1,57 @@
 <jaxb:bindings version="2.1" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
     xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com.fnf="http://www.fnf.com/xes">
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/Account.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/Account.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='Account']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/BankTransaction.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/BankTransaction.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='BankTransaction']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/CreditNote.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/CreditNote.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='CreditNote']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/Employee.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/Employee.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='Employee']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/ExpenseClaim.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/ExpenseClaim.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='ExpenseClaim']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/Invoice.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/Invoice.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='Invoice']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/ManualJournal.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/ManualJournal.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='ManualJournal']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/Payment.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/Payment.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='Payment']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/Receipt.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/Receipt.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='Receipt']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/TaxRate.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/TaxRate.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='TaxRate']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>
   </jaxb:bindings>
-  <jaxb:bindings schemaLocation="../../XeroAPI-Schemas/v2.00/Tracking.xsd" node="/xs:schema">
+  <jaxb:bindings schemaLocation="../../../../../XeroAPI-Schemas/v2.00/Tracking.xsd" node="/xs:schema">
     <jaxb:bindings node="/xs:schema/xs:complexType[@name='TrackingCategory']/xs:attribute[@name='status']">
       <jaxb:property name="validationStatus" />
     </jaxb:bindings>

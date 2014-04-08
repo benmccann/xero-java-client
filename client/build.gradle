@@ -26,6 +26,8 @@ sourceSets {
   }
 }
 
+compileJava.dependsOn ':source-gen:xjc'
+
 // Publish to local ivy repository with: gradle publishIvyJavaPublicationToIvyRepository
 publishing {
   publications {
