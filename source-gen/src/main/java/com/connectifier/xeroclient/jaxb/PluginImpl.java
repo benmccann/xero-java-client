@@ -74,22 +74,12 @@ public class PluginImpl extends Plugin {
       JMethod newMethod = implClass.method(removed.mods().getValue(), newReturnType, removed.name());
       JFieldVar field = implClass.fields().get(varName);          
       JClass typeParameter = newReturnType.getTypeParameters().get(0);
-      
-//      ((JClass) field.type()).
-
       String fieldName = model._getClass(field.type().fullName()).fields().keySet().iterator().next();
-      
-      
+
       newMethod.body()._return(
           JOp.cond(field.eq(JExpr._null()),
               JExpr._new(model.ref("java.util.ArrayList").narrow(typeParameter)),
               field.invoke("get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1))));
-      
-      
-//      newMethod.body()._return(
-//          JOp.cond(field.eq(JExpr._null()),
-//              JExpr._new(model.ref("java.util.ArrayList").narrow(typeParameter)),
-//              field.invoke("get" + typeParameter.name())));
     }    
   }
   
