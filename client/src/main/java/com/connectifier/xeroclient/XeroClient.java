@@ -96,7 +96,6 @@ public class XeroClient {
     try {
       JAXBContext context = JAXBContext.newInstance(clazz);
       Unmarshaller unmarshaller = context.createUnmarshaller();
-//      unmarshaller.setAdapter(new NullToEmptyArrayAdapter());
       Source source = new StreamSource(new ByteArrayInputStream(response.getBody().getBytes()));
       return unmarshaller.unmarshal(source, clazz).getValue();
     } catch (JAXBException e) {

@@ -1,3 +1,5 @@
+// Copyright 2014 Connectifier, Inc. All Rights Reserved.
+
 package com.connectifier.xeroclient.jaxb;
 
 import java.io.StringWriter;
