@@ -21,6 +21,4 @@ This client currently only has methods included or read calls, but it should onl
 https://github.com/XeroAPI/XeroAPI-Schemas must be checked out as a sibling project
 Then run:
 
-    cd jaxb
-    ./jaxb/generateFromSchema.sh
     gradle compileJava
