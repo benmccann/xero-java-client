@@ -1,3 +1,13 @@
+## Downloading
+
+The library is available from the Central Maven Repository and can be used easily by many tools including Maven, Gradle, SBT, etc.
+
+    <dependency>
+      <groupId>com.connectifier.xero</groupId>
+      <artifactId>client</artifactId>
+      <version>0.1</version>
+    </dependency>
+
 ## Example Usage
 
     Reader pemReader = new FileReader(new File("my-x509-cert.pem"));
@@ -18,7 +28,6 @@ This client currently only has methods included or read calls, but it should onl
 
 ## Hacking on this library
 
-https://github.com/XeroAPI/XeroAPI-Schemas must be checked out as a sibling project
-Then run:
+The Gradle build tool must be installed. https://github.com/XeroAPI/XeroAPI-Schemas must be checked out as a sibling project. Build with:
 
     gradle compileJava
