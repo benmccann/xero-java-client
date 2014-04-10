@@ -93,13 +93,14 @@ public class XeroClient {
   }
 
   private <T> T unmarshallResponse(Response response, Class<T> clazz) {
+    String responseBody = response.getBody();
     try {
       JAXBContext context = JAXBContext.newInstance(clazz);
       Unmarshaller unmarshaller = context.createUnmarshaller();
-      Source source = new StreamSource(new ByteArrayInputStream(response.getBody().getBytes()));
+      Source source = new StreamSource(new ByteArrayInputStream(responseBody.getBytes()));
       return unmarshaller.unmarshal(source, clazz).getValue();
     } catch (JAXBException e) {
-      throw new IllegalStateException(e);
+      throw new IllegalStateException("Error unmarshalling response: " + responseBody, e);
     }
   }
   
