@@ -85,9 +85,17 @@ public class XeroClient {
     service.signRequest(token, request);
     Response response = request.send();
     if (response.getCode() != 200) {
-      ApiException exception = unmarshallResponse(response, ApiException.class);
-      throw new XeroApiException(response.getCode() + " response: Error number "
-          + exception.getErrorNumber() + ". " + exception.getMessage());        
+      ApiException exception = null;
+      try {
+        exception = unmarshallResponse(response, ApiException.class);
+      } catch (Exception e) {  
+      }
+      if (exception == null) {
+        throw new XeroApiException(response.getCode());
+      } else {
+        throw new XeroApiException(response.getCode(), "Error number "
+            + exception.getErrorNumber() + ". " + exception.getMessage());        
+      }
     }
     return unmarshallResponse(response, ResponseType.class);
   }
