@@ -20,7 +20,9 @@ Pull requests will be accepted for any not yet supported features if they are ac
 
 Currently, only the private app authentication method has been implemented. We use Scribe to support OAuth, so support for the public app OAuth should be straight forward to implement if needed.
 
-Note that repeating invoices and bank transfers are not supported due to lack of support in Xero's own XML schemas. This repository will be updated when those bugs are fixed. See:
+Support for attachments has not yet been added.
+
+Repeating invoices and bank transfers are not supported due to lack of support in Xero's own XML schemas. This repository will be updated when those bugs are fixed. See:
 * https://github.com/XeroAPI/XeroAPI-Schemas/issues/8
 * https://github.com/XeroAPI/XeroAPI-Schemas/issues/9
 
