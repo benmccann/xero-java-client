@@ -1,0 +1,3 @@
+<schema-set>
+  <class-decorator class="com.connectifier.xeroclient.jibx.CodeRewriter" />
+</schema-set>

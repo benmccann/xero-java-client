@@ -14,27 +14,27 @@ repositories {
 }
 
 dependencies {
-  compile 'com.sun.xml.bind:jaxb-impl:2.2.7'
-  compile 'com.sun.xml.bind:jaxb-xjc:2.2.7'
+  compile 'org.jibx:jibx-tools:1.2.5'
 }
 
-task xjc(dependsOn: installApp) {
+task jibx(dependsOn: installApp) {
   description 'Converts .xsd files to Java classes'
-  def jaxbTargetDirPath = "../client/src/generated/java"
-  def jaxbTargetDir = file(jaxbTargetDirPath)
-  jaxbTargetDir.deleteDir()
-  jaxbTargetDir.mkdirs()
+  def targetDirPath = "../client/src/generated/java"
+  def targetDir = file(targetDirPath)
+  targetDir.deleteDir()
+  targetDir.mkdirs()
 
   doLast {
     def installDir = file('build/install/source-gen/lib/').getAbsoluteFile();
     def installPath = installDir.getAbsolutePath() + File.separator;
     def installCp = installPath + installDir.list().join(File.pathSeparator + installPath)
-    ant.taskdef(name: 'xjc', classname: 'com.sun.tools.xjc.XJC2Task', classpath: installCp)
-    ant.jaxbTargetDir = jaxbTargetDir
-    ant.xjc(destdir: '${jaxbTargetDir}', package: 'com.connectifier.xeroclient.models') {
-      schema(dir: '../../XeroAPI-Schemas/v2.00/', includes: '*.xsd')
-      binding(dir: 'src/main/resources/', includes: '*.xjb')
-      arg(value: '-Xcustom')
+    ant.java(classname: 'org.jibx.schema.codegen.CodeGen', fork: false, classPath: installCp) {
+      arg(line: '-c src/main/resources/jibx-customization.xml')
+      arg(line: '-s ../../XeroAPI-Schemas/v2.00/')
+      arg(line: '-p com.connectifier.xeroclient.models')
+      arg(line: '-t ' + targetDir)
+      arg(line: '-w')
+      arg(line: "*.xsd")
     }
   }
 
