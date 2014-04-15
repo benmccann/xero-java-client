@@ -1,4 +1,4 @@
-client/src/generated/java
+xero-client/src/generated/java
 
 .gradle
 build

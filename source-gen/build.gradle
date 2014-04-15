@@ -19,22 +19,22 @@ dependencies {
 
 task jibx(dependsOn: installApp) {
   description 'Converts .xsd files to Java classes'
-  def targetDirPath = "../client/src/generated/java"
-  def targetDir = file(targetDirPath)
-  targetDir.deleteDir()
-  targetDir.mkdirs()
+  def targetDir = file('../xero-client/src/generated/java')
 
   doLast {
-    def installDir = file('build/install/source-gen/lib/').getAbsoluteFile();
-    def installPath = installDir.getAbsolutePath() + File.separator;
+    def installDir = file('build/install/source-gen/lib/').absoluteFile;
+    def installPath = installDir.absolutePath + File.separator;
     def installCp = installPath + installDir.list().join(File.pathSeparator + installPath)
-    ant.java(classname: 'org.jibx.schema.codegen.CodeGen', fork: false, classPath: installCp) {
-      arg(line: '-c src/main/resources/jibx-customization.xml')
-      arg(line: '-s ../../XeroAPI-Schemas/v2.00/')
-      arg(line: '-p com.connectifier.xeroclient.models')
-      arg(line: '-t ' + targetDir)
-      arg(line: '-w')
-      arg(line: "*.xsd")
+    javaexec {
+      classpath installCp
+      main = 'org.jibx.schema.codegen.CodeGen'
+      args = ['-c', file('src/main/resources/jibx-customization.xml').absolutePath,
+              '-s', file('../../XeroAPI-Schemas/v2.00/').absolutePath,
+              '-p', 'com.connectifier.xeroclient.models',
+              '-t', targetDir,
+              '-w',
+              '-v',
+              '*.xsd']
     }
   }
 

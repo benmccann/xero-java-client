@@ -44,9 +44,7 @@ public class CodeRewriter implements ClassDecorator {
     String typeSimple = type.substring(type.lastIndexOf('.') + 1);
     if (typeSimple.startsWith("ArrayOf")) {
       String wrappedType = type.substring(type.indexOf("ArrayOf") + "ArrayOf".length());
-
       holder.addMethod(createGetter(ast, field, basename, typeSimple, wrappedType, getmeth));
-      getmeth.setName(ast.newSimpleName(getmeth.getName().getIdentifier() + "AsArray"));
     }
         
   }
@@ -60,7 +58,7 @@ public class CodeRewriter implements ClassDecorator {
     ParameterizedType returnType = ast.newParameterizedType(ast.newSimpleType(ast.newName("List")));
     returnType.typeArguments().add(ast.newSimpleType(ast.newName(wrappedType)));
     method.setReturnType2(returnType);
-    method.setName(ast.newSimpleName(oldGetter.getName().getIdentifier()));
+    method.setName(ast.newSimpleName(oldGetter.getName().getIdentifier() + "AsList"));
 
     Block body = ast.newBlock();
     IfStatement ifStatement = ast.newIfStatement();

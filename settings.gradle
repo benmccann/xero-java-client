@@ -1,1 +1,1 @@
-include 'client', 'source-gen'
+include 'source-gen', 'xero-client'
