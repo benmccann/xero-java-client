@@ -14,6 +14,12 @@ The library is available from the Central Maven Repository and can be used easil
     XeroClient client = new XeroClient(pemReader, consumerKey, consumerSecret);
     client.getInvoices();
 
+## Advantages
+
+* This library and all dependencies are available in the Maven Central Repository
+* Work with standard Java classes like List<Invoice> and Date instead of ArrayOfInvoice and JAXBElement<GregorianCalendar>
+* Easily extensible - protected, non-final client
+
 ## Not yet supported
 
 Pull requests will be accepted for any not yet supported features. Changes to existing methods will be more likely to be accepted if a test is added. All fields in the XeroClient are protected to make it easy to extend in your own code without needing to update this client.
