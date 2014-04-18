@@ -17,7 +17,7 @@ The library is available from the Central Maven Repository and can be used easil
 ## Advantages
 
 * This library and all dependencies are available in the Maven Central Repository
-* Work with standard Java classes like List<Invoice> and Date instead of ArrayOfInvoice and JAXBElement<GregorianCalendar>
+* Work with standard Java classes like List&lt;Invoice&gt; and Date instead of ArrayOfInvoice and JAXBElement&lt;GregorianCalendar&gt;
 * Easily extensible - protected, non-final client
 
 ## Not yet supported
