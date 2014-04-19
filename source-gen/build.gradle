@@ -19,7 +19,7 @@ dependencies {
 
 task jibx(dependsOn: installApp) {
   description 'Converts .xsd files to Java classes'
-  def targetDir = file('../xero-client/src/generated/java')
+  def targetDir = file('../client/src/generated/java')
 
   doLast {
     def installDir = file('build/install/source-gen/lib/').absoluteFile;
