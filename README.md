@@ -31,10 +31,6 @@ The only write call included thus far is for creating invoices because that's al
 Error handling is not great because Xero's API is not conforming to their XML schema. See:
 * https://github.com/XeroAPI/XeroAPI-Schemas/issues/13
 
-Repeating invoices and bank transfers are not supported due to lack of support in Xero's own XML schemas. See:
-* https://github.com/XeroAPI/XeroAPI-Schemas/issues/8
-* https://github.com/XeroAPI/XeroAPI-Schemas/issues/9
-
 Support for attachments has not yet been added.
 
 Currently, only the private app authentication method has been implemented. We use Scribe to support OAuth, so support for the public app OAuth should be straight forward to implement if needed.
