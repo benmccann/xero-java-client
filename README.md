@@ -42,5 +42,3 @@ The Gradle build tool must be installed and [Xero's XML schema library](https://
     gradle compileJava
 
 Note that you can only run via Gradle and not via an IDE. See the [JiBX binding page](http://jibx.sourceforge.net/bindcomp.html#ide-use) for more details.
-
-Also, a pending pull request to the [Xero API XML schemas is required](https://github.com/XeroAPI/XeroAPI-Schemas/pull/12)
