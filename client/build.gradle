@@ -36,7 +36,7 @@ compileJava.dependsOn ':source-gen:jibx'
 
 compileJava {
   doLast{
-    bindingFilePath = file('src/generated/java/binding.xml').absolutePath
+    String bindingFilePath = file('src/generated/java/binding.xml').absolutePath
 
     project.ant {
       taskdef(name: 'jibx',
