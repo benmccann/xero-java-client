@@ -5,7 +5,7 @@ The library is available from the Central Maven Repository and can be used easil
     <dependency>
       <groupId>com.connectifier.xero</groupId>
       <artifactId>client</artifactId>
-      <version>0.2</version>
+      <version>0.6</version>
     </dependency>
 
 ## Example Usage
@@ -37,3 +37,9 @@ The Gradle build tool must be installed and [Xero's XML schema library](https://
     gradle compileJava
 
 Note that you can only run via Gradle and not via an IDE. See the [JiBX binding page](http://jibx.sourceforge.net/bindcomp.html#ide-use) for more details.
+
+## Deploying to Maven Central
+
+Project admin can run:
+
+    gradle uploadArchives

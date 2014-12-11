@@ -7,7 +7,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.connectifier.xero'
-version = '0.5'
+version = '0.6'
 
 repositories {
   mavenCentral()
@@ -86,7 +86,7 @@ signing {
 
 uploadArchives {
   repositories.mavenDeployer {
-    beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
+    beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
     repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
       authentication(userName: nexusUsername, password: nexusPassword)
     }
