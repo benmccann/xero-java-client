@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
@@ -28,6 +30,7 @@ import org.scribe.oauth.OAuthService;
 import com.connectifier.xeroclient.models.Account;
 import com.connectifier.xeroclient.models.ApiException;
 import com.connectifier.xeroclient.models.BankTransaction;
+import com.connectifier.xeroclient.models.BankTransfer;
 import com.connectifier.xeroclient.models.BrandingTheme;
 import com.connectifier.xeroclient.models.Contact;
 import com.connectifier.xeroclient.models.CreditNote;
@@ -41,6 +44,7 @@ import com.connectifier.xeroclient.models.ManualJournal;
 import com.connectifier.xeroclient.models.Organisation;
 import com.connectifier.xeroclient.models.Payment;
 import com.connectifier.xeroclient.models.Receipt;
+import com.connectifier.xeroclient.models.RepeatingInvoice;
 import com.connectifier.xeroclient.models.ResponseType;
 import com.connectifier.xeroclient.models.TaxRate;
 import com.connectifier.xeroclient.models.TrackingCategory;
@@ -58,7 +62,9 @@ public class XeroClient {
 
   protected final OAuthService service;
   protected final Token token;
-  
+
+  protected static final Pattern MESSAGE_PATTERN = Pattern.compile("<Message>(.*)</Message>");
+
   public XeroClient(Reader pemReader, String consumerKey, String consumerSecret) {
     service = new ServiceBuilder()
         .provider(new XeroOAuthService(pemReader))
@@ -68,6 +74,30 @@ public class XeroClient {
     token = new Token(consumerKey, consumerSecret);
   }
 
+  protected XeroApiException newApiException(Response response) {
+    ApiException exception = null;
+    try {
+      exception = unmarshallResponse(response, ApiException.class);
+    } catch (Exception e) {  
+    }
+    // Jibx doesn't support xsi:type, so we pull out errors this somewhat-hacky way 
+    Matcher matcher = MESSAGE_PATTERN.matcher(response.getBody());
+    StringBuilder messages = new StringBuilder();
+    while (matcher.find()) {
+      if (messages.length() > 0) {
+        messages.append(", ");
+      }
+      messages.append(matcher.group(1));
+    }
+    if (exception == null) {
+      if (messages.length() > 0) {
+        return new XeroApiException(response.getCode(), messages.toString());
+      }
+      return new XeroApiException(response.getCode());
+    }
+    return new XeroApiException(response.getCode(), "Error number " + exception.getErrorNumber() + ". " + messages);     
+  }
+  
   protected ResponseType get(String endPoint) {
     return get(endPoint, null, null);
   }
@@ -85,17 +115,7 @@ public class XeroClient {
     service.signRequest(token, request);
     Response response = request.send();
     if (response.getCode() != 200) {
-      ApiException exception = null;
-      try {
-        exception = unmarshallResponse(response, ApiException.class);
-      } catch (Exception e) {  
-      }
-      if (exception == null) {
-        throw new XeroApiException(response.getCode());
-      } else {
-        throw new XeroApiException(response.getCode(), "Error number "
-            + exception.getErrorNumber() + ". " + exception.getMessage());        
-      }
+      throw newApiException(response);
     }
     return unmarshallResponse(response, ResponseType.class);
   }
@@ -107,9 +127,7 @@ public class XeroClient {
     service.signRequest(token, request);
     Response response = request.send();
     if (response.getCode() != 200) {
-      ApiException exception = unmarshallResponse(response, ApiException.class);
-      throw new XeroApiException(response.getCode(), "Error number "
-          + exception.getErrorNumber() + ". " + exception.getMessage());        
+      throw newApiException(response);
     }
     return unmarshallResponse(response, ResponseType.class);
   }
@@ -184,10 +202,9 @@ public class XeroClient {
     return get("BankTransactions", modifiedAfter, params).getBankTransactionsAsList();
   }
 
-// https://github.com/XeroAPI/XeroAPI-Schemas/issues/8
-//  public List<BankTransfer> getBankTransfers() {
-//    return issueQuery("BankTransfers").getankTransfersAsList();
-//  }
+  public List<BankTransfer> getBankTransfers() {
+    return get("BankTransfers").getBankTransfersAsList();
+  }
 
   public List<BrandingTheme> getBrandingThemes() {
     return get("BrandingThemes").getBrandingThemesAsList();
@@ -369,10 +386,9 @@ public class XeroClient {
     return get("Receipts", modifiedAfter, params).getReceiptsAsList();
   }
 
-// https://github.com/XeroAPI/XeroAPI-Schemas/issues/9
-//  public List<RepeatingInvoice> getRepeatingInvoices() {
-//    return issueQuery("RepeatingInvoices").getRepeatingInvoicesAsList();
-//  }
+  public List<RepeatingInvoice> getRepeatingInvoices() {
+    return get("RepeatingInvoices").getRepeatingInvoicesAsList();
+  }
 
   public List<TaxRate> getTaxRates() {
     return get("TaxRates").getTaxRatesAsList();
