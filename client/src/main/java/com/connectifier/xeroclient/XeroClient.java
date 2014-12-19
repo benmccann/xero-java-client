@@ -77,8 +77,8 @@ public class XeroClient {
   protected XeroApiException newApiException(Response response) {
     ApiException exception = null;
     try {
-      exception = unmarshallResponse(response, ApiException.class);
-    } catch (Exception e) {  
+      exception = unmarshallResponse(response.getBody(), ApiException.class);
+    } catch (Exception e) {
     }
     // Jibx doesn't support xsi:type, so we pull out errors this somewhat-hacky way 
     Matcher matcher = MESSAGE_PATTERN.matcher(response.getBody());
@@ -117,7 +117,7 @@ public class XeroClient {
     if (response.getCode() != 200) {
       throw newApiException(response);
     }
-    return unmarshallResponse(response, ResponseType.class);
+    return unmarshallResponse(response.getBody(), ResponseType.class);
   }
 
   protected ResponseType put(String endPoint, Object object) {
@@ -129,7 +129,7 @@ public class XeroClient {
     if (response.getCode() != 200) {
       throw newApiException(response);
     }
-    return unmarshallResponse(response, ResponseType.class);
+    return unmarshallResponse(response.getBody(), ResponseType.class);
   }
 
   private <T> String marshallRequest(T object) {
@@ -145,8 +145,7 @@ public class XeroClient {
   }
 
   @SuppressWarnings("unchecked")
-  private <T> T unmarshallResponse(Response response, Class<T> clazz) {
-    String responseBody = response.getBody();
+  protected static <T> T unmarshallResponse(String responseBody, Class<T> clazz) {
     try {
       IBindingFactory jc = BindingDirectory.getFactory(clazz);
       IUnmarshallingContext unmarshaller = jc.createUnmarshallingContext();      
