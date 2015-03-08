@@ -29,6 +29,7 @@ import org.scribe.oauth.OAuthService;
 
 import com.connectifier.xeroclient.models.Account;
 import com.connectifier.xeroclient.models.ApiException;
+import com.connectifier.xeroclient.models.ArrayOfInvoice;
 import com.connectifier.xeroclient.models.BankTransaction;
 import com.connectifier.xeroclient.models.BankTransfer;
 import com.connectifier.xeroclient.models.BrandingTheme;
@@ -295,6 +296,12 @@ public class XeroClient {
 
   public List<Invoice> createInvoice(Invoice invoice) {
     return put("Invoices", invoice).getInvoicesAsList();
+  }
+
+  public List<Invoice> createInvoices(List<Invoice> invoices) {
+    ArrayOfInvoice array = new ArrayOfInvoice();
+    array.setInvoiceList(invoices);
+    return put("Invoices", array).getInvoicesAsList();
   }
 
   public List<Invoice> getInvoices(Date modifiedAfter, String where, String order, Integer page) {
