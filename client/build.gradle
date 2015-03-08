@@ -7,22 +7,16 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.connectifier.xero'
-version = '0.10'
+version = '0.11'
 
 repositories {
   mavenCentral()
 }
 
-configurations {
-  jibx
-}
-
 dependencies {
   compile 'com.google.guava:guava:18.0'
   compile 'org.bouncycastle:bcpkix-jdk15on:1.51'
-  compile 'org.jibx:jibx-schema:1.2.5'
   compile 'org.scribe:scribe:1.3.5'
-  jibx 'org.jibx:jibx-bind:1.2.5'
   testCompile 'junit:junit:4.11'
 }
 
@@ -32,23 +26,7 @@ sourceSets {
   }
 }
 
-compileJava.dependsOn ':source-gen:jibx'
-
-compileJava {
-  doLast{
-    String bindingFilePath = file('src/generated/java/binding.xml').absolutePath
-
-    project.ant {
-      taskdef(name: 'jibx',
-          classname: 'org.jibx.binding.ant.CompileTask',
-          classpath: configurations.jibx.asPath)
-
-      jibx(verbose: true, load: true, binding: bindingFilePath) {
-        classpathset(dir: sourceSets.main.output.classesDir)
-      }
-    }
-  }
-}
+compileJava.dependsOn ':source-gen:xjc'
 
 // Publish to local ivy repository with: gradle publishIvyJavaPublicationToIvyRepository
 publishing {

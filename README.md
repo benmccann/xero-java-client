@@ -5,7 +5,7 @@ The library is available from the Central Maven Repository and can be used easil
     <dependency>
       <groupId>com.connectifier.xero</groupId>
       <artifactId>client</artifactId>
-      <version>0.10</version>
+      <version>0.11</version>
     </dependency>
 
 ## Example Usage
@@ -17,6 +17,7 @@ The library is available from the Central Maven Repository and can be used easil
 ## Advantages
 
 * This library and all dependencies are available in the Maven Central Repository
+* Compatible with Java 8 (libraries using JiBX are not due to BCEL dependency)
 * Work with standard Java classes like List&lt;Invoice&gt; and Date instead of ArrayOfInvoice and JAXBElement&lt;GregorianCalendar&gt;
 * Easily extensible - protected, non-final client
 

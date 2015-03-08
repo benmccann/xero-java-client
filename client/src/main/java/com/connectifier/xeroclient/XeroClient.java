@@ -2,8 +2,8 @@
 
 package com.connectifier.xeroclient;
 
+import java.io.ByteArrayInputStream;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,11 +15,13 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jibx.runtime.BindingDirectory;
-import org.jibx.runtime.IBindingFactory;
-import org.jibx.runtime.IMarshallingContext;
-import org.jibx.runtime.IUnmarshallingContext;
-import org.jibx.runtime.JiBXException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
@@ -135,23 +137,23 @@ public class XeroClient {
 
   private <T> String marshallRequest(T object) {
     try {
-      IBindingFactory jc = BindingDirectory.getFactory(object.getClass());
-      IMarshallingContext marshaller = jc.createMarshallingContext();
+      JAXBContext context = JAXBContext.newInstance(object.getClass());
+      Marshaller marshaller = context.createMarshaller();
       StringWriter writer = new StringWriter();
-      marshaller.marshalDocument(object, "UTF-8", null, writer);
+      marshaller.marshal(object, writer);
       return writer.toString();
-    } catch (JiBXException e) {
+    } catch (JAXBException e) {
       throw new IllegalStateException("Error marshalling request object " + object.getClass(), e);
     }
   }
 
-  @SuppressWarnings("unchecked")
   protected static <T> T unmarshallResponse(String responseBody, Class<T> clazz) {
     try {
-      IBindingFactory jc = BindingDirectory.getFactory(clazz);
-      IUnmarshallingContext unmarshaller = jc.createUnmarshallingContext();      
-      return (T) unmarshaller.unmarshalDocument(new StringReader(responseBody));
-    } catch (JiBXException e) {
+      JAXBContext context = JAXBContext.newInstance(clazz);
+      Unmarshaller unmarshaller = context.createUnmarshaller();
+      Source source = new StreamSource(new ByteArrayInputStream(responseBody.getBytes()));
+      return unmarshaller.unmarshal(source, clazz).getValue();
+    } catch (JAXBException e) {
       throw new IllegalStateException("Error unmarshalling response: " + responseBody, e);
     }
   }
@@ -173,41 +175,41 @@ public class XeroClient {
   }
 
   public Account getAccount(String id) {
-    return singleResult(get("Accounts/" + id).getAccountsAsList());
+    return singleResult(get("Accounts/" + id).getAccounts());
   }
 
   public List<Account> getAccounts() {
-    return get("Accounts").getAccountsAsList();
+    return get("Accounts").getAccounts();
   }
 
   public List<Account> getAccounts(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("Accounts", modifiedAfter, params).getAccountsAsList();
+    return get("Accounts", modifiedAfter, params).getAccounts();
   }
 
   public BankTransaction getBankTransaction(String id) {
-    return singleResult(get("BankTransactions/" + id).getBankTransactionsAsList());
+    return singleResult(get("BankTransactions/" + id).getBankTransactions());
   }
 
   public List<BankTransaction> getBankTransactions() {
-    return get("BankTransactions").getBankTransactionsAsList();
+    return get("BankTransactions").getBankTransactions();
   }
 
   public List<BankTransaction> getBankTransactions(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("BankTransactions", modifiedAfter, params).getBankTransactionsAsList();
+    return get("BankTransactions", modifiedAfter, params).getBankTransactions();
   }
 
   public List<BankTransfer> getBankTransfers() {
-    return get("BankTransfers").getBankTransfersAsList();
+    return get("BankTransfers").getBankTransfers();
   }
 
   public List<BrandingTheme> getBrandingThemes() {
-    return get("BrandingThemes").getBrandingThemesAsList();
+    return get("BrandingThemes").getBrandingThemes();
   }
 
   public List<BankTransaction> getBrandingThemes(String name, Integer sortOrder, Date createdDateUTC) {
@@ -217,15 +219,15 @@ public class XeroClient {
     if (createdDateUTC != null) {
       params.put("CreatedDateUTC", utcFormatter.format(createdDateUTC));
     }
-    return get("BankTransactions", null, params).getBankTransactionsAsList();
+    return get("BankTransactions", null, params).getBankTransactions();
   }
 
   public Contact getContact(String id) {
-    return singleResult(get("Contacts/" + id).getContactsAsList());
+    return singleResult(get("Contacts/" + id).getContacts());
   }
 
   public List<Contact> getContacts() {
-    return get("Contacts").getContactsAsList();
+    return get("Contacts").getContacts();
   }
 
   public List<Contact> getContacts(Date modifiedAfter, String where, String order, Integer page, Boolean includedArchive) {
@@ -234,74 +236,74 @@ public class XeroClient {
     addToMapIfNotNull(params, "order", order);
     addToMapIfNotNull(params, "page", page);
     addToMapIfNotNull(params, "includeArchived", includedArchive);
-    return get("Contacts", modifiedAfter, params).getContactsAsList();
+    return get("Contacts", modifiedAfter, params).getContacts();
   }
 
   public CreditNote getCreditNote(String id) {
-    return singleResult(get("CreditNotes/" + id).getCreditNotesAsList());
+    return singleResult(get("CreditNotes/" + id).getCreditNotes());
   }
 
   public List<CreditNote> getCreditNotes() {
-    return get("CreditNotes").getCreditNotesAsList();
+    return get("CreditNotes").getCreditNotes();
   }
 
   public List<CreditNote> getCreditNotes(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("CreditNotes", modifiedAfter, params).getCreditNotesAsList();
+    return get("CreditNotes", modifiedAfter, params).getCreditNotes();
   }
 
   public List<Currency> getCurrencies() {
-    return get("Currencies").getCurrenciesAsList();
+    return get("Currencies").getCurrencies();
   }
 
   public Employee getEmployee(String id) {
-    return singleResult(get("Employees/" + id).getEmployeesAsList());
+    return singleResult(get("Employees/" + id).getEmployees());
   }
 
   public List<Employee> getEmployees() {
-    return get("Employees").getEmployeesAsList();
+    return get("Employees").getEmployees();
   }
 
   public List<Employee> getEmployees(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("Employees", modifiedAfter, params).getEmployeesAsList();
+    return get("Employees", modifiedAfter, params).getEmployees();
   }
 
   public List<ExpenseClaim> getExpenseClaim(String id) {
-    return get("ExpenseClaims/" + id).getExpenseClaimsAsList();
+    return get("ExpenseClaims/" + id).getExpenseClaims();
   }
 
   public List<ExpenseClaim> getExpenseClaims() {
-    return get("ExpenseClaims").getExpenseClaimsAsList();
+    return get("ExpenseClaims").getExpenseClaims();
   }
 
   public List<ExpenseClaim> getExpenseClaims(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("ExpenseClaims", modifiedAfter, params).getExpenseClaimsAsList();
+    return get("ExpenseClaims", modifiedAfter, params).getExpenseClaims();
   }
 
   public Invoice getInvoice(String id) {
-    return singleResult(get("Invoices/" + id).getInvoicesAsList());
+    return singleResult(get("Invoices/" + id).getInvoices());
   }
 
   public List<Invoice> getInvoices() {
-    return get("Invoices").getInvoicesAsList();
+    return get("Invoices").getInvoices();
   }
 
   public List<Invoice> createInvoice(Invoice invoice) {
-    return put("Invoices", invoice).getInvoicesAsList();
+    return put("Invoices", invoice).getInvoices();
   }
 
   public List<Invoice> createInvoices(List<Invoice> invoices) {
     ArrayOfInvoice array = new ArrayOfInvoice();
-    array.setInvoiceList(invoices);
-    return put("Invoices", array).getInvoicesAsList();
+    array.getInvoice().addAll(invoices);
+    return put("Invoices", array).getInvoices();
   }
 
   public List<Invoice> getInvoices(Date modifiedAfter, String where, String order, Integer page) {
@@ -309,30 +311,30 @@ public class XeroClient {
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
     addToMapIfNotNull(params, "page", page);
-    return get("Invoices", modifiedAfter, params).getInvoicesAsList();
+    return get("Invoices", modifiedAfter, params).getInvoices();
   }
 
   public Item getItem(String id) {
-    return singleResult(get("Items/" + id).getItemsAsList());
+    return singleResult(get("Items/" + id).getItems());
   }
 
   public List<Item> getItems() {
-    return get("Items").getItemsAsList();
+    return get("Items").getItems();
   }
 
   public List<Item> getItems(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("Items", modifiedAfter, params).getItemsAsList();
+    return get("Items", modifiedAfter, params).getItems();
   }
 
   public Journal getJournal(String id) {
-    return singleResult(get("Journal").getJournalsAsList());
+    return singleResult(get("Journal").getJournals());
   }
 
   public List<Journal> getJournals() {
-    return get("Journals").getJournalsAsList();
+    return get("Journals").getJournals();
   }
 
   public List<Journal> getJournals(Date modifiedAfter, Integer offset, String where, String order) {
@@ -340,101 +342,101 @@ public class XeroClient {
     addToMapIfNotNull(params, "offset", offset);
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("Journals", modifiedAfter, params).getJournalsAsList();
+    return get("Journals", modifiedAfter, params).getJournals();
   }
 
   public ManualJournal getManualJournal(String id) {
-    return singleResult(get("ManualJournals/" + id).getManualJournalsAsList());
+    return singleResult(get("ManualJournals/" + id).getManualJournals());
   }
 
   public List<ManualJournal> getManualJournals() {
-    return get("ManualJournals").getManualJournalsAsList();
+    return get("ManualJournals").getManualJournals();
   }
 
   public List<ManualJournal> getManualJournals(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("ManualJournal", modifiedAfter, params).getManualJournalsAsList();
+    return get("ManualJournal", modifiedAfter, params).getManualJournals();
   }
 
   public Organisation getOrganisation() {
-    return singleResult(get("Organisation").getOrganisationsAsList());
+    return singleResult(get("Organisation").getOrganisations());
   }
 
   public Payment getPayments(String id) {
-    return singleResult(get("Payments/" + id).getPaymentsAsList());
+    return singleResult(get("Payments/" + id).getPayments());
   }
 
   public List<Payment> getPayments() {
-    return get("Payments").getPaymentsAsList();
+    return get("Payments").getPayments();
   }
 
   public List<Payment> getPayments(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("Payments", modifiedAfter, params).getPaymentsAsList();
+    return get("Payments", modifiedAfter, params).getPayments();
   }
 
   public Receipt getReceipt(String id) {
-    return singleResult(get("Receipts/" + id).getReceiptsAsList());
+    return singleResult(get("Receipts/" + id).getReceipts());
   }
 
   public List<Receipt> getReceipts() {
-    return get("Receipts").getReceiptsAsList();
+    return get("Receipts").getReceipts();
   }
 
   public List<Receipt> getReceipts(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("Receipts", modifiedAfter, params).getReceiptsAsList();
+    return get("Receipts", modifiedAfter, params).getReceipts();
   }
 
   public List<RepeatingInvoice> getRepeatingInvoices() {
-    return get("RepeatingInvoices").getRepeatingInvoicesAsList();
+    return get("RepeatingInvoices").getRepeatingInvoices();
   }
 
   public List<TaxRate> getTaxRates() {
-    return get("TaxRates").getTaxRatesAsList();
+    return get("TaxRates").getTaxRates();
   }
 
   public List<TaxRate> getTaxRates(String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("TaxRates", null, params).getTaxRatesAsList();
+    return get("TaxRates", null, params).getTaxRates();
   }
 
   public TrackingCategory getTrackingCategory(String id) {
-    return singleResult(get("TrackingCategories/" + id).getTrackingCategoriesAsList());
+    return singleResult(get("TrackingCategories/" + id).getTrackingCategories());
   }
 
   public List<TrackingCategory> getTrackingCategories() {
-    return get("TrackingCategories").getTrackingCategoriesAsList();
+    return get("TrackingCategories").getTrackingCategories();
   }
 
   public List<TrackingCategory> getTrackingCategories(String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("TrackingCategories", null, params).getTrackingCategoriesAsList();
+    return get("TrackingCategories", null, params).getTrackingCategories();
   }
 
   public User getUser(String id) {
-    return singleResult(get("Users/" + id).getUsersAsList());
+    return singleResult(get("Users/" + id).getUsers());
   }
 
   public List<User> getUsers() {
-    return get("Users").getUsersAsList();
+    return get("Users").getUsers();
   }
 
   public List<User> getUsers(Date modifiedAfter, String where, String order) {
     Map<String, String> params = new HashMap<>();
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
-    return get("Users", modifiedAfter, params).getUsersAsList();
+    return get("Users", modifiedAfter, params).getUsers();
   }
 
 }
