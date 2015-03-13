@@ -26,6 +26,7 @@ task xjc(dependsOn: installApp) {
     def installDir = file('build/install/source-gen/lib/').absoluteFile;
     def installPath = installDir.absolutePath + File.separator;
     def installCp = installPath + installDir.list().join(File.pathSeparator + installPath)
+    System.setProperty('javax.xml.accessExternalSchema', 'all')
     ant.taskdef(name: 'xjc', classname: 'com.sun.tools.xjc.XJC2Task', classpath: installCp)
     ant.jaxbTargetDir = jaxbTargetDir
     ant.xjc(destdir: '${jaxbTargetDir}', package: 'com.connectifier.xeroclient.models') {
