@@ -18,7 +18,7 @@ The library is available from the Central Maven Repository and can be used easil
 
 * This library and all dependencies are available in the Maven Central Repository
 * Compatible with Java 8 (libraries using JiBX are not due to BCEL dependency)
-* Work with standard Java classes like List&lt;Invoice&gt; and Date instead of ArrayOfInvoice and JAXBElement&lt;GregorianCalendar&gt;
+* Work with standard Java classes like List&lt;Invoice&gt; and Date (other libraries using JAXB give you things like ArrayOfInvoice and JAXBElement&lt;GregorianCalendar&gt;)
 * Easily extensible - protected, non-final client
 
 ## Not yet supported
@@ -33,14 +33,6 @@ Currently, only the private app authentication method has been implemented. We u
 
 ## Hacking on this library
 
-The Gradle build tool must be installed and [Xero's XML schema library](https://github.com/XeroAPI/XeroAPI-Schemas) must be checked out as a sibling project. Build with:
+The SBT build tool must be installed and [Xero's XML schema library](https://github.com/XeroAPI/XeroAPI-Schemas) must be checked out as a sibling project. Build with:
 
-    gradle compileJava
-
-Note that you can only run via Gradle and not via an IDE. See the [JiBX binding page](http://jibx.sourceforge.net/bindcomp.html#ide-use) for more details.
-
-## Deploying to Maven Central
-
-Project admin can run:
-
-    gradle uploadArchives
+    sbt compile

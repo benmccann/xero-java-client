@@ -2,6 +2,7 @@ client/src/generated/java
 
 .gradle
 build
+target
 
 .classpath
 .project
