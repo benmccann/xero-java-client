@@ -10,6 +10,9 @@ autoScalaLibrary := false
 
 // XJC-plugin settings
 sources in (Compile, xjc) += baseDirectory.value / ".." / ".." / "XeroAPI-Schemas" / "v2.00"
+// Can remove sourceManaged line after using future version of plugin
+// https://github.com/sbt/sbt-xjc/commit/226ff93ddcd0374aae0383b0a2a4e0282f7b7374
+sourceManaged in (Compile, xjc) <<= sourceManaged / "main"
 xjcCommandLine += "-p"
 xjcCommandLine += "com.connectifier.xeroclient.models"
 xjcBindings += "src/main/resources/bindings.xjb"
@@ -23,3 +26,8 @@ libraryDependencies ++= Seq(
   "junit"            % "junit"           % "4.12"  % "test",
   "com.novocode"     % "junit-interface" % "0.11"  % "test"
 )
+
+// Eclipse
+import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys
+EclipseKeys.createSrc := EclipseCreateSrc.All
+EclipseKeys.withSource := true
