@@ -298,6 +298,14 @@ public class XeroClient {
     return get("Invoices").getInvoices();
   }
 
+  public List<Invoice> getInvoices(Date modifiedAfter, String where, String order, Integer page) {
+    Map<String, String> params = new HashMap<>();
+    addToMapIfNotNull(params, "Where", where);
+    addToMapIfNotNull(params, "order", order);
+    addToMapIfNotNull(params, "page", page);
+    return get("Invoices", modifiedAfter, params).getInvoices();
+  }
+
   public List<Invoice> createInvoice(Invoice invoice) {
     return put("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
@@ -306,14 +314,6 @@ public class XeroClient {
     ArrayOfInvoice array = new ArrayOfInvoice();
     array.getInvoice().addAll(invoices);
     return put("Invoices", objFactory.createInvoices(array)).getInvoices();
-  }
-
-  public List<Invoice> getInvoices(Date modifiedAfter, String where, String order, Integer page) {
-    Map<String, String> params = new HashMap<>();
-    addToMapIfNotNull(params, "Where", where);
-    addToMapIfNotNull(params, "order", order);
-    addToMapIfNotNull(params, "page", page);
-    return get("Invoices", modifiedAfter, params).getInvoices();
   }
 
   public Item getItem(String id) {
