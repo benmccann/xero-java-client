@@ -29,5 +29,7 @@ libraryDependencies ++= Seq(
 
 // Eclipse
 import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys
+EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+EclipseKeys.withBundledScalaContainers := false
 EclipseKeys.createSrc := EclipseCreateSrc.All
 EclipseKeys.withSource := true
