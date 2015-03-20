@@ -5,7 +5,7 @@ The library is available from the Central Maven Repository and can be used easil
     <dependency>
       <groupId>com.connectifier.xero</groupId>
       <artifactId>client</artifactId>
-      <version>0.11</version>
+      <version>0.12</version>
     </dependency>
 
 ## Example Usage
