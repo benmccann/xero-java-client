@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -44,6 +45,7 @@ import com.connectifier.xeroclient.models.Invoice;
 import com.connectifier.xeroclient.models.Item;
 import com.connectifier.xeroclient.models.Journal;
 import com.connectifier.xeroclient.models.ManualJournal;
+import com.connectifier.xeroclient.models.ObjectFactory;
 import com.connectifier.xeroclient.models.Organisation;
 import com.connectifier.xeroclient.models.Payment;
 import com.connectifier.xeroclient.models.Receipt;
@@ -62,11 +64,11 @@ public class XeroClient {
     utcFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     utcFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
+  protected static final Pattern MESSAGE_PATTERN = Pattern.compile("<Message>(.*)</Message>");
 
   protected final OAuthService service;
   protected final Token token;
-
-  protected static final Pattern MESSAGE_PATTERN = Pattern.compile("<Message>(.*)</Message>");
+  protected final ObjectFactory objFactory = new ObjectFactory();
 
   public XeroClient(Reader pemReader, String consumerKey, String consumerSecret) {
     service = new ServiceBuilder()
@@ -123,7 +125,7 @@ public class XeroClient {
     return unmarshallResponse(response.getBody(), ResponseType.class);
   }
 
-  protected ResponseType put(String endPoint, Object object) {
+  protected ResponseType put(String endPoint, JAXBElement<?> object) {
     OAuthRequest request = new OAuthRequest(Verb.PUT, BASE_URL + endPoint);
     String contents = marshallRequest(object);
     request.addPayload(contents);
@@ -135,9 +137,9 @@ public class XeroClient {
     return unmarshallResponse(response.getBody(), ResponseType.class);
   }
 
-  private <T> String marshallRequest(T object) {
+  private <T> String marshallRequest(JAXBElement<?> object) {
     try {
-      JAXBContext context = JAXBContext.newInstance(object.getClass());
+      JAXBContext context = JAXBContext.newInstance(object.getValue().getClass());
       Marshaller marshaller = context.createMarshaller();
       StringWriter writer = new StringWriter();
       marshaller.marshal(object, writer);
@@ -297,13 +299,13 @@ public class XeroClient {
   }
 
   public List<Invoice> createInvoice(Invoice invoice) {
-    return put("Invoices", invoice).getInvoices();
+    return put("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
 
   public List<Invoice> createInvoices(List<Invoice> invoices) {
     ArrayOfInvoice array = new ArrayOfInvoice();
     array.getInvoice().addAll(invoices);
-    return put("Invoices", array).getInvoices();
+    return put("Invoices", objFactory.createInvoices(array)).getInvoices();
   }
 
   public List<Invoice> getInvoices(Date modifiedAfter, String where, String order, Integer page) {
