@@ -2,11 +2,13 @@
 
 organization := "com.connectifier.xero"
 name := "client"
-version := "0.12"
+version := "0.13"
 
 // Java. Not Scala
 crossPaths := false
 autoScalaLibrary := false
+javacOptions in (Compile, compile) ++= Seq("-source", "1.7", "-target", "1.7")
+javacOptions in (doc) ++= Seq("-source", "1.7", "-Xdoclint:none")
 
 // XJC-plugin settings
 sources in (Compile, xjc) += baseDirectory.value / ".." / ".." / "XeroAPI-Schemas" / "v2.00"
@@ -31,7 +33,7 @@ libraryDependencies ++= Seq(
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
 EclipseKeys.withSource := true
 
-// Publishing to Maven Central
+// Publish to Maven Central with publishSigned task
 publishMavenStyle := true
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
