@@ -8,6 +8,10 @@ version := "0.1-SNAPSHOT"
 crossPaths := false
 autoScalaLibrary := false
 
+// Eclipse
+EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+EclipseKeys.withSource := true
+
 libraryDependencies ++= Seq(
   "org.glassfish.jaxb" % "jaxb-xjc"        % "2.2.11",
   "junit"              % "junit"           % "4.12"  % "test",
