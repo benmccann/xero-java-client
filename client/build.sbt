@@ -29,8 +29,6 @@ libraryDependencies ++= Seq(
 
 // Eclipse
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
-EclipseKeys.withBundledScalaContainers := false
-EclipseKeys.createSrc := EclipseCreateSrc.All
 EclipseKeys.withSource := true
 
 // Publishing to Maven Central
