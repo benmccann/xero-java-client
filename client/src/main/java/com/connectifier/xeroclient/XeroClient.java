@@ -128,6 +128,7 @@ public class XeroClient {
   protected ResponseType put(String endPoint, JAXBElement<?> object) {
     OAuthRequest request = new OAuthRequest(Verb.PUT, BASE_URL + endPoint);
     String contents = marshallRequest(object);
+    System.out.println(contents);
     request.addPayload(contents);
     service.signRequest(token, request);
     Response response = request.send();
@@ -309,6 +310,10 @@ public class XeroClient {
   public List<Invoice> createInvoice(Invoice invoice) {
     return put("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
+  
+  public List<Receipt> createReceipt(Receipt receipt) {
+	    return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
+	  }
 
   public List<Invoice> createInvoices(List<Invoice> invoices) {
     ArrayOfInvoice array = new ArrayOfInvoice();
