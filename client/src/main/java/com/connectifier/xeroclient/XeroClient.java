@@ -309,10 +309,10 @@ public class XeroClient {
   public List<Invoice> createInvoice(Invoice invoice) {
     return put("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
-  
+
   public List<Receipt> createReceipt(Receipt receipt) {
-	    return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
-	  }
+    return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
+  }
 
   public List<Invoice> createInvoices(List<Invoice> invoices) {
     ArrayOfInvoice array = new ArrayOfInvoice();
