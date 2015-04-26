@@ -36,3 +36,16 @@ Currently, only the private app authentication method has been implemented. We u
 The SBT build tool must be installed and [Xero's XML schema library](https://github.com/XeroAPI/XeroAPI-Schemas) must be checked out as a sibling project. Build with:
 
     sbt compile
+
+## Examples
+
+### Creating an invoice
+
+    List<Contact> contacts = client.getContacts();
+    Invoice invoice = new Invoice();
+    LineItem item = new LineItem();
+    item.setDescription("Test Invoice");
+    invoice.setLineItems(ImmutableList.of(item));
+    invoice.setType(InvoiceType.ACCREC);
+    invoice.setContact(contacts.get(0));
+    client.createInvoice(invoice);
