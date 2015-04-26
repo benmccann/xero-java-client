@@ -128,7 +128,6 @@ public class XeroClient {
   protected ResponseType put(String endPoint, JAXBElement<?> object) {
     OAuthRequest request = new OAuthRequest(Verb.PUT, BASE_URL + endPoint);
     String contents = marshallRequest(object);
-    System.out.println(contents);
     request.addPayload(contents);
     service.signRequest(token, request);
     Response response = request.send();
