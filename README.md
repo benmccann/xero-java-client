@@ -10,17 +10,23 @@ The library is available from the Central Maven Repository and can be used easil
 
 ## Example Usage
 
+Creating a client:
+
     Reader pemReader = new FileReader(new File("my-x509-cert.pem"));
     XeroClient client = new XeroClient(pemReader, consumerKey, consumerSecret);
+
+Getting invoices:
+
     client.getInvoices();
 
-    List<Contact> contacts = client.getContacts();
+Creating an invoice:
+
     Invoice invoice = new Invoice();
+    invoice.setType(InvoiceType.ACCREC);
+    invoice.setContact(client.getContacts().get(0));
     LineItem item = new LineItem();
     item.setDescription("Test Invoice");
     invoice.setLineItems(ImmutableList.of(item));
-    invoice.setType(InvoiceType.ACCREC);
-    invoice.setContact(contacts.get(0));
     client.createInvoice(invoice);
 
 ## Advantages
@@ -34,7 +40,7 @@ The library is available from the Central Maven Repository and can be used easil
 
 Pull requests will be accepted for any not yet supported features. Changes to existing methods will be more likely to be accepted if a test is added. All fields in the XeroClient are protected to make it easy to extend in your own code without needing to update this client.
 
-The only write call included thus far is for creating invoices because that's all we've needed. It's only a few lines to add a new write method if you find one that you need. However, this is another area where Xero's XML schemas are lacking, so you may have to submit a pull request to the Xero XML Schema project to be able to write new types as shown in [this example](https://github.com/benmccann/XeroAPI-Schemas/commit/334966c6fb6ef2f981a6313082b340fb18075846) and [this example](https://github.com/XeroAPI/XeroAPI-Schemas/commit/58d1fdd66b5f8024d8a3e35b18fb0a563211588a).
+The only write call included thus far is for creating invoices and receipts because that's all we've needed. It's only a few lines to add a new write method if you find one that you need. However, this is another area where Xero's XML schemas are lacking, so you may have to submit a pull request to the Xero XML Schema project to be able to write new types as shown in [this example](https://github.com/benmccann/XeroAPI-Schemas/commit/334966c6fb6ef2f981a6313082b340fb18075846) and [this example](https://github.com/XeroAPI/XeroAPI-Schemas/commit/58d1fdd66b5f8024d8a3e35b18fb0a563211588a).
 
 Support for attachments has not yet been added.
 
