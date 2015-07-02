@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Arrays;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -33,6 +34,8 @@ import org.scribe.oauth.OAuthService;
 import com.connectifier.xeroclient.models.Account;
 import com.connectifier.xeroclient.models.ApiException;
 import com.connectifier.xeroclient.models.ArrayOfInvoice;
+import com.connectifier.xeroclient.models.ArrayOfReceipt;
+import com.connectifier.xeroclient.models.ArrayOfBankTransaction;
 import com.connectifier.xeroclient.models.BankTransaction;
 import com.connectifier.xeroclient.models.BankTransfer;
 import com.connectifier.xeroclient.models.BrandingTheme;
@@ -85,7 +88,7 @@ public class XeroClient {
       exception = unmarshallResponse(response.getBody(), ApiException.class);
     } catch (Exception e) {
     }
-    // Jibx doesn't support xsi:type, so we pull out errors this somewhat-hacky way 
+    // Jibx doesn't support xsi:type, so we pull out errors this somewhat-hacky way
     Matcher matcher = MESSAGE_PATTERN.matcher(response.getBody());
     StringBuilder messages = new StringBuilder();
     while (matcher.find()) {
@@ -100,9 +103,9 @@ public class XeroClient {
       }
       return new XeroApiException(response.getCode());
     }
-    return new XeroApiException(response.getCode(), "Error number " + exception.getErrorNumber() + ". " + messages);     
+    return new XeroApiException(response.getCode(), "Error number " + exception.getErrorNumber() + ". " + messages);
   }
-  
+
   protected ResponseType get(String endPoint) {
     return get(endPoint, null, null);
   }
@@ -165,7 +168,7 @@ public class XeroClient {
       map.put(key, value.toString());
     }
   }
-  
+
   protected <T> T singleResult(List<T> list) {
     if (list.isEmpty()) {
       return null;
@@ -310,14 +313,30 @@ public class XeroClient {
     return put("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
 
+  public List<Receipt> createReceipts(List<Receipt> receipts) {
+    ArrayOfReceipt array = new ArrayOfReceipt();
+    array.getReceipt().addAll(receipts);
+    return put("Receipts", objFactory.createReceipts(array)).getReceipts();
+  }
+
   public List<Receipt> createReceipt(Receipt receipt) {
-    return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
+    return createReceipts(Arrays.asList(receipt));
   }
 
   public List<Invoice> createInvoices(List<Invoice> invoices) {
     ArrayOfInvoice array = new ArrayOfInvoice();
     array.getInvoice().addAll(invoices);
     return put("Invoices", objFactory.createInvoices(array)).getInvoices();
+  }
+
+  public List<BankTransaction> createBankTransactions(List<BankTransaction> bankTransactions) {
+    ArrayOfBankTransaction array = new ArrayOfBankTransaction();
+    array.getBankTransaction().addAll(bankTransactions);
+    return put("BankTransactions", objFactory.createBankTransactions(array)).getBankTransactions();
+  }
+
+  public List<BankTransaction> createBankTransaction(BankTransaction bankTransaction) {
+    return createBankTransactions(Arrays.asList(bankTransaction));
   }
 
   public Item getItem(String id) {
