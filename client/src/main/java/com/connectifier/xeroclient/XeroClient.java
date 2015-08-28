@@ -128,7 +128,7 @@ public class XeroClient {
   protected ResponseType put(String endPoint, JAXBElement<?> object) {
     OAuthRequest request = new OAuthRequest(Verb.PUT, BASE_URL + endPoint);
     String contents = marshallRequest(object);
-    request.setCharset("UTF-8"); // set character set to UTF-8
+    request.setCharset("UTF-8");
     request.addBodyParameter("xml", contents);
     service.signRequest(token, request);
     Response response = request.send();
