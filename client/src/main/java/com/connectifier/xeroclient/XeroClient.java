@@ -33,6 +33,7 @@ import org.scribe.oauth.OAuthService;
 import com.connectifier.xeroclient.models.Account;
 import com.connectifier.xeroclient.models.ApiException;
 import com.connectifier.xeroclient.models.ArrayOfInvoice;
+import com.connectifier.xeroclient.models.ArrayOfManualJournal;
 import com.connectifier.xeroclient.models.BankTransaction;
 import com.connectifier.xeroclient.models.BankTransfer;
 import com.connectifier.xeroclient.models.BrandingTheme;
@@ -364,6 +365,12 @@ public class XeroClient {
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
     return get("ManualJournal", modifiedAfter, params).getManualJournals();
+  }
+
+  public List<ManualJournal> createManualJournals(List<ManualJournal> manualJournals) {
+    ArrayOfManualJournal array = new ArrayOfManualJournal();
+    array.getManualJournal().addAll(manualJournals);
+    return put("ManualJournals", objFactory.createManualjournals(array)).getManualJournals();
   }
 
   public Organisation getOrganisation() {
