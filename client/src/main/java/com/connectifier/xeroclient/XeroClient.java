@@ -33,6 +33,7 @@ import org.scribe.oauth.OAuthService;
 import com.connectifier.xeroclient.models.Account;
 import com.connectifier.xeroclient.models.ApiException;
 import com.connectifier.xeroclient.models.ArrayOfInvoice;
+import com.connectifier.xeroclient.models.ArrayOfBankTransaction;
 import com.connectifier.xeroclient.models.ArrayOfManualJournal;
 import com.connectifier.xeroclient.models.BankTransaction;
 import com.connectifier.xeroclient.models.BankTransfer;
@@ -206,6 +207,12 @@ public class XeroClient {
     addToMapIfNotNull(params, "Where", where);
     addToMapIfNotNull(params, "order", order);
     return get("BankTransactions", modifiedAfter, params).getBankTransactions();
+  }
+
+  public List<BankTransaction> createBankTransactions(List<BankTransaction> bankTransactions) {
+    ArrayOfBankTransaction array = new ArrayOfBankTransaction();
+    array.getBankTransaction().addAll(bankTransactions);
+    return put("BankTransactions", objFactory.createBankTransactions(array)).getBankTransactions();
   }
 
   public List<BankTransfer> getBankTransfers() {
