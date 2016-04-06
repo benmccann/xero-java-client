@@ -140,7 +140,20 @@ public class XeroClient {
     return unmarshallResponse(response.getBody(), ResponseType.class);
   }
 
-  private <T> String marshallRequest(JAXBElement<?> object) {
+  protected ResponseType post(String endPoint, JAXBElement<?> object) {
+    OAuthRequest request = new OAuthRequest(Verb.POST, BASE_URL + endPoint);
+    String contents = marshallRequest(object);
+    request.setCharset("UTF-8");
+    request.addBodyParameter("xml", contents);
+    service.signRequest(token, request);
+    Response response = request.send();
+    if (response.getCode() != 200) {
+      throw newApiException(response);
+    }
+    return unmarshallResponse(response.getBody(), ResponseType.class);
+  }
+
+  protected <T> String marshallRequest(JAXBElement<?> object) {
     try {
       JAXBContext context = JAXBContext.newInstance(object.getValue().getClass());
       Marshaller marshaller = context.createMarshaller();
@@ -319,6 +332,10 @@ public class XeroClient {
     return put("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
 
+  public List<Invoice> updateInvoice(Invoice invoice) {
+    return post("Invoices", objFactory.createInvoice(invoice)).getInvoices();
+  }
+
   public List<Receipt> createReceipt(Receipt receipt) {
     return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
   }
@@ -327,6 +344,12 @@ public class XeroClient {
     ArrayOfInvoice array = new ArrayOfInvoice();
     array.getInvoice().addAll(invoices);
     return put("Invoices", objFactory.createInvoices(array)).getInvoices();
+  }
+
+  public List<Invoice> updateInvoices(List<Invoice> invoices) {
+    ArrayOfInvoice array = new ArrayOfInvoice();
+    array.getInvoice().addAll(invoices);
+    return post("Invoices", objFactory.createInvoices(array)).getInvoices();
   }
 
   public Item getItem(String id) {
