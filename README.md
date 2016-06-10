@@ -1,3 +1,7 @@
+## Unmaintained - Forks Welcomed
+
+We will no longer be maintaining this repository, so please feel free to fork it.
+
 ## Downloading
 
 The library is available from the Central Maven Repository and can be used easily by many tools including Maven, Gradle, SBT, etc.
