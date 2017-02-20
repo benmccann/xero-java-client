@@ -2,7 +2,7 @@
 
 organization := "com.connectifier.xero"
 name := "client"
-version := "0.13"
+version := "0.14"
 
 // Java. Not Scala
 crossPaths := false

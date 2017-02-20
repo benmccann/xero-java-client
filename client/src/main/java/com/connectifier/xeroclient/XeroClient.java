@@ -52,7 +52,6 @@ import com.connectifier.xeroclient.models.Organisation;
 import com.connectifier.xeroclient.models.Payment;
 import com.connectifier.xeroclient.models.Receipt;
 import com.connectifier.xeroclient.models.RepeatingInvoice;
-import com.connectifier.xeroclient.models.ResponseType;
 import com.connectifier.xeroclient.models.TaxRate;
 import com.connectifier.xeroclient.models.TrackingCategory;
 import com.connectifier.xeroclient.models.User;
@@ -105,11 +104,11 @@ public class XeroClient {
     return new XeroApiException(response.getCode(), "Error number " + exception.getErrorNumber() + ". " + messages);     
   }
   
-  protected ResponseType get(String endPoint) {
+  protected com.connectifier.xeroclient.models.Response get(String endPoint) {
     return get(endPoint, null, null);
   }
 
-  protected ResponseType get(String endPoint, Date modifiedAfter, Map<String,String> params) {
+  protected com.connectifier.xeroclient.models.Response get(String endPoint, Date modifiedAfter, Map<String,String> params) {
     OAuthRequest request = new OAuthRequest(Verb.GET, BASE_URL + endPoint);
     if (modifiedAfter != null) {
       request.addHeader("If-Modified-Since", utcFormatter.format(modifiedAfter));
@@ -124,10 +123,10 @@ public class XeroClient {
     if (response.getCode() != 200) {
       throw newApiException(response);
     }
-    return unmarshallResponse(response.getBody(), ResponseType.class);
+    return unmarshallResponse(response.getBody(), com.connectifier.xeroclient.models.Response.class);
   }
 
-  protected ResponseType put(String endPoint, JAXBElement<?> object) {
+  protected com.connectifier.xeroclient.models.Response put(String endPoint, JAXBElement<?> object) {
     OAuthRequest request = new OAuthRequest(Verb.PUT, BASE_URL + endPoint);
     String contents = marshallRequest(object);
     request.setCharset("UTF-8");
@@ -137,10 +136,10 @@ public class XeroClient {
     if (response.getCode() != 200) {
       throw newApiException(response);
     }
-    return unmarshallResponse(response.getBody(), ResponseType.class);
+    return unmarshallResponse(response.getBody(), com.connectifier.xeroclient.models.Response.class);
   }
 
-  protected ResponseType post(String endPoint, JAXBElement<?> object) {
+  protected com.connectifier.xeroclient.models.Response post(String endPoint, JAXBElement<?> object) {
     OAuthRequest request = new OAuthRequest(Verb.POST, BASE_URL + endPoint);
     String contents = marshallRequest(object);
     request.setCharset("UTF-8");
@@ -150,7 +149,7 @@ public class XeroClient {
     if (response.getCode() != 200) {
       throw newApiException(response);
     }
-    return unmarshallResponse(response.getBody(), ResponseType.class);
+    return unmarshallResponse(response.getBody(), com.connectifier.xeroclient.models.Response.class);
   }
 
   protected <T> String marshallRequest(JAXBElement<?> object) {
@@ -336,9 +335,9 @@ public class XeroClient {
     return post("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
 
-  public List<Receipt> createReceipt(Receipt receipt) {
-    return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
-  }
+//  public List<Receipt> createReceipt(Receipt receipt) {
+  //  return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
+  //}
 
   public List<Invoice> createInvoices(List<Invoice> invoices) {
     ArrayOfInvoice array = new ArrayOfInvoice();
