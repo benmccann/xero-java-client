@@ -21,6 +21,13 @@ xjcBindings += "src/main/resources/bindings.xjb"
 xjcPlugins += "com.connectifier.xero" % "xjc-plugin" % "0.1-SNAPSHOT"
 xjcCommandLine += "-Xcustom"
 
+//mappings in (Compile,packageSrc) ++= (managedSources in Compile).value map (s => (s,s.getName))
+mappings in (Compile, packageSrc) ++= {
+  val base  = (sourceManaged  in Compile).value
+  val files = (managedSources in Compile).value
+  files.map { f => (f, f.relativeTo(base).get.getPath) }
+}
+
 libraryDependencies ++= Seq(
   "com.google.guava" % "guava"           % "18.0",
   "org.bouncycastle" % "bcpkix-jdk15on"  % "1.51",
