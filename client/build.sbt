@@ -11,7 +11,7 @@ javacOptions in (Compile, compile) ++= Seq("-source", "1.7", "-target", "1.7")
 javacOptions in (doc) ++= Seq("-source", "1.7", "-Xdoclint:none")
 
 // XJC-plugin settings
-sources in (Compile, xjc) += baseDirectory.value / ".." / ".." / "XeroAPI-Schemas" / "v2.00"
+sources in (Compile, xjc) += baseDirectory.value / ".." / ".." / "XeroAPI-Schemas" / "src" / "main" / "resources" / "XeroSchemas" / "v2.00"
 // Can remove sourceManaged line after using future version of plugin
 // https://github.com/sbt/sbt-xjc/commit/226ff93ddcd0374aae0383b0a2a4e0282f7b7374
 sourceManaged in (Compile, xjc) <<= sourceManaged / "main"
