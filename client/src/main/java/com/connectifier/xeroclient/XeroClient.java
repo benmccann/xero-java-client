@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import com.connectifier.xeroclient.models.ApiException;
 import com.connectifier.xeroclient.models.ArrayOfInvoice;
 import com.connectifier.xeroclient.models.ArrayOfBankTransaction;
 import com.connectifier.xeroclient.models.ArrayOfManualJournal;
+import com.connectifier.xeroclient.models.ArrayOfReceipt;
 import com.connectifier.xeroclient.models.BankTransaction;
 import com.connectifier.xeroclient.models.BankTransfer;
 import com.connectifier.xeroclient.models.BrandingTheme;
@@ -87,7 +89,7 @@ public class XeroClient {
       exception = unmarshallResponse(response.getBody(), ApiException.class);
     } catch (Exception e) {
     }
-    // Jibx doesn't support xsi:type, so we pull out errors this somewhat-hacky way 
+    // Jibx doesn't support xsi:type, so we pull out errors this somewhat-hacky way
     Matcher matcher = MESSAGE_PATTERN.matcher(response.getBody());
     StringBuilder messages = new StringBuilder();
     while (matcher.find()) {
@@ -102,7 +104,7 @@ public class XeroClient {
       }
       return new XeroApiException(response.getCode());
     }
-    return new XeroApiException(response.getCode(), "Error number " + exception.getErrorNumber() + ". " + messages);     
+    return new XeroApiException(response.getCode(), "Error number " + exception.getErrorNumber() + ". " + messages);
   }
   
   protected ResponseType get(String endPoint) {
@@ -228,6 +230,10 @@ public class XeroClient {
     return put("BankTransactions", objFactory.createBankTransactions(array)).getBankTransactions();
   }
 
+  public List<BankTransaction> createBankTransaction(BankTransaction bankTransaction) {
+    return createBankTransactions(Arrays.asList(bankTransaction));
+  }
+
   public List<BankTransfer> getBankTransfers() {
     return get("BankTransfers").getBankTransfers();
   }
@@ -336,8 +342,14 @@ public class XeroClient {
     return post("Invoices", objFactory.createInvoice(invoice)).getInvoices();
   }
 
+  public List<Receipt> createReceipts(List<Receipt> receipts) {
+    ArrayOfReceipt array = new ArrayOfReceipt();
+    array.getReceipt().addAll(receipts);
+    return put("Receipts", objFactory.createReceipts(array)).getReceipts();
+  }
+
   public List<Receipt> createReceipt(Receipt receipt) {
-    return put("Receipts", objFactory.createReceipt(receipt)).getReceipts();
+    return createReceipts(Arrays.asList(receipt));
   }
 
   public List<Invoice> createInvoices(List<Invoice> invoices) {
