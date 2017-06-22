@@ -2,7 +2,7 @@
 
 organization := "com.connectifier.xero"
 name := "client"
-version := "0.13"
+version := "0.14"
 
 // Java. Not Scala
 crossPaths := false
@@ -20,6 +20,13 @@ xjcCommandLine += "com.connectifier.xeroclient.models"
 xjcBindings += "src/main/resources/bindings.xjb"
 xjcPlugins += "com.connectifier.xero" % "xjc-plugin" % "0.1-SNAPSHOT"
 xjcCommandLine += "-Xcustom"
+
+//mappings in (Compile,packageSrc) ++= (managedSources in Compile).value map (s => (s,s.getName))
+mappings in (Compile, packageSrc) ++= {
+  val base  = (sourceManaged  in Compile).value
+  val files = (managedSources in Compile).value
+  files.map { f => (f, f.relativeTo(base).get.getPath) }
+}
 
 libraryDependencies ++= Seq(
   "com.google.guava" % "guava"           % "18.0",
